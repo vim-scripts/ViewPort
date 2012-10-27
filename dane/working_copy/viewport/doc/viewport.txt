@@ -1,0 +1,59 @@
+*viewport.txt* 			For Vim version 7	Last change: 27 X 2012
+
+
+				     View Port
+				by Marcin Szamotulski
+			    mszamot [AT] gmail [DOT] com
+			----------------------------------------
+
+PURPOSE ~
+
+Some times I want to make diffs of parts of files using the vimdiff.  You
+simply cannot mark parts of file to be in vimdiff.  Here this plugin comes
+handy.  It makes a view port on a range of lines: it copies range of lines to
+a new buffer, sets two marks in the source buffer, which mark the starting and
+ending positions.  When you save the view port with the vim |:write| command,
+the modified data is installed back into the source file.  If the source file
+was changed (in the range where view port is opened) and you try to save it an
+error message is printed, you can use :write! to overwrite.  You can modify
+the source as you wish, just don't delete the starting line and ending line of
+the view port, since you will remove the marks.  You can also move the marks
+to new position and update the view port.
+
+View port works line wise, rathen just from mark to mark.  You can request to
+make it better, and I will implement it.
+
+INTERFACE							     *viewport*
+
+								    *:Vpedit*
+:[range]Vpedit [s_mark] [e_mark]
+    Make view port on the [range] (the default is the current line).  The new
+    buffer is opened with |:edit| command. [s_mark] is the mark to use for the
+    starting position, and [e_mark] is the mark to use for the end position. 
+    The default is t for s_mark and y for e_mark.
+								    *:Vpsplit*
+:[range]Vpsplit [s_mark] [e_mark]
+    Open view port in a new split window.
+								    *:Vpvsplit*
+:[range]Vpsplit [s_mark] [e_mark]
+    Open view port in a new vertical split window.
+
+
+In the view port buffer:
+
+								    *viewport-:write*
+:w[rite][!]
+    Install the changes in to the source buffer.  If the original buffer in
+    the range the view port was modified an error message is printed, unless
+    the bang is used.  If one of the view port marks was deleted, an error
+    message is printed and the writting process is abandoned.  The plugin also
+    takes care about the 'modified' option.  If the view port is written
+    without errors 'modififed' is reset.
+
+								    *:Update*
+:Update
+    Loads what is in the source file into the view port buffer.
+
+
+LICENSE ~
+Vim license, :help license

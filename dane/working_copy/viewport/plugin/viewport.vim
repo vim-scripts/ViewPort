@@ -1,30 +1,6 @@
 " Author: Marcin Szamotulski, © 2012
 " License: Vim-License, see :help license
-" Plugin Description:
-"
-" :{range}ViewSplit [s_mark, [e_mark]]
-" :{range}ViewEdit [s_mark, [e_mark]]
-" :{range}ViewVSplit [s_mark, [e_mark]]
-"
-"   make a view on the range, when :write is used the view is installed back
-"   in the {range}.
-"
-"   s_mark is the mark used for starting position of {range}, the default is 't
-"   e_mark is the mark used for end position of {range}, the default is 'y
-"
-"   Note: If you want to have more than one view you need to start with different
-"   marks, otherwise you will just change the marks of the current view.
-"
-"   Note: that :bw command deletes marks. You might not want it in some
-"   scenarios.
-"
-" In the view buffer you can use:
-" :Update
-" to update its content, reading the {range} from the source file.
-"
-" What for is this plugin:
-" You can diff parts of files, apply changes and install them back in the
-" original file.
+
 fun! <sid>ViewPort(cmd, s_line, e_line, ...) " {{{1
     if !has("autocmd")
 	echohl WarningMsg
@@ -54,9 +30,9 @@ fun! <sid>ViewPort(cmd, s_line, e_line, ...) " {{{1
     let bufnr = bufnr("%")
     let ft = &filetype
     if !empty(ft)
-	exe a:cmd.' +setl\ ft='.ft.'\ buftype=acwrite viewport://'.fnameescape(expand('%:p')).'\ '.s_mark.'-'.e_mark
+	exe a:cmd.' +setl\ ft='.ft.'\ buftype=acwrite viewport://'.fnameescape(expand('%:p').' '.s_mark.'-'.e_mark)
     else
-	exe a:cmd.' +setl\ buftype=acwrite viewport://'.fnameescape(expand('%:p')).'\ '.s_mark'-'.e_mark
+	exe a:cmd.' +setl\ buftype=acwrite viewport://'.fnameescape(expand('%:p').' '.s_mark.'-'.e_mark)
     endif
     setl ma
     let &l:statusline = ''
