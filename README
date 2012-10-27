@@ -1,0 +1,5 @@
+This is a mirror of http://www.vim.org/scripts/script.php?script_id=4296
+
+Note: if you want to downgrade the plugin, let me know what is wrong with it, I am sure it can be fixed.
+
+This is a simple plugin which makes a buffer from a part of a buffer. Saving the new buffer will install the changes into the original buffer rather than save it to disk. This is a nice utility if you wan to make diffs of two parts of two files. If the original part of the file was modified an error message is given (like when saving to a modified file to a disk), you can use :w! to discard the changes made in original file. The script is using marks to track the positions, hence you can modify the original file.
