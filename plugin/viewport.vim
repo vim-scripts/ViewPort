@@ -1,10 +1,10 @@
 " Author: Marcin Szamotulski, © 2012
 " License: Vim-License, see :help license
 
-fun! <sid>ViewPort(cmd, s_line, e_line, ...) " {{{1
+fun! ViewPort(cmd, s_line, e_line, ...) " {{{1
     if !has("autocmd")
 	echohl WarningMsg
-	echom "[ViewPort:] requires +autocmd feature"
+	echom "[ViewPort]: requires +autocmd feature"
 	echohl Normal
 	return
     endif
@@ -20,7 +20,7 @@ fun! <sid>ViewPort(cmd, s_line, e_line, ...) " {{{1
     endif
     if s_mark == e_mark
 	echohl WarningMsg
-	echomsg "[ViewPort:] starting mark and ending mark have to be distinct"
+	echomsg "[ViewPort]: starting mark and ending mark have to be distinct"
 	echohl Normal
 	return
     endif
@@ -68,12 +68,12 @@ fun! <sid>Read() " {{{1
 	exe "keepalt b ".c_bufnr
 	let &hid = hid
 	" XXX: I could make this work with :echomsg.
-	echoerr "[ViewPort:] the begin mark \"".address[1]."\" was deleted, aborting."
+	echoerr "[ViewPort]: the begin mark \"".address[1]."\" was deleted, aborting."
 	return
     elseif e_pos == [0, 0, 0, 0]
 	exe "keepalt b ".c_bufnr
 	let &hid = hid
-	echoerr "[ViewPort:] the end mark \"".address[2]."\" was deleted, aborting."
+	echoerr "[ViewPort]: the end mark \"".address[2]."\" was deleted, aborting."
 	return
     elseif s_pos[1] > e_pos[1]
 	let address[1:2] = [ address[2], address[1] ] 
@@ -111,7 +111,7 @@ fun! <sid>Write() " {{{1
 	    exe "buffer ".address[0]
 	catch /E86:/
 	    echohl ErrorMsg
-	    echomsg "[ViewPort:] buffer ".address[0]." does not exists"
+	    echomsg "[ViewPort]: buffer ".address[0]." does not exists"
 	    echohl Normal
 	    return
 	endtry
@@ -120,12 +120,12 @@ fun! <sid>Write() " {{{1
     let e_pos = getpos(address[2])
     if s_pos == [0, 0, 0, 0]
 	echohl WarningMsg
-	echomsg "[ViewPort:] the begin mark \"".address[1]."\" was deleted, aborting."
+	echomsg "[ViewPort]: the begin mark \"".address[1]."\" was deleted, aborting."
 	echohl Normal
 	return
     elseif e_pos == [0, 0, 0, 0]
 	echohl WarningMsg
-	echomsg "[ViewPort:] the end mark \"".address[2]."\" was deleted, aborting."
+	echomsg "[ViewPort]: the end mark \"".address[2]."\" was deleted, aborting."
 	echohl Normal
 	return
     endif
@@ -133,12 +133,16 @@ fun! <sid>Write() " {{{1
     let e_line = e_pos[1]
     let c_lines = getline(s_line, e_line)
     let test = v:cmdbang || c_lines == vp_lines
-    let g:c_lines = copy(c_lines)
-    if (test)
+    let ma = &l:ma
+    if (test) && (ma)
 	exe "silent! ".s_line.",".e_line."delete _"
 	call append(s_line-1, lines)
 	call setpos(address[1],[0, s_line, 0, 0])
 	call setpos(address[2],[0, s_line+len(lines)-1, 0, 0])
+    elseif !(ma)
+	echohl ErrorMsg
+	echom "[ViewPort]: Cannot make changes, 'modifiable' is off in the target"
+	echohl None
     endif
     if exists("c_winnr")
 	exe c_winnr."wincmd w"
@@ -149,9 +153,10 @@ fun! <sid>Write() " {{{1
 	unlet c_bufnr
     endif
     call winrestview(winview)
+    if !(ma)|return|endif
     if !(test)
 	echohl ErrorMsg
-	echom "[ViewPort:] target buffer modified, use w! to overwrite"
+	echom "[ViewPort]: target buffer modified, use w! to overwrite"
 	echohl Normal
     else
 	setl nomod

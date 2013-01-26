@@ -1,4 +1,4 @@
-*viewport.txt* 			For Vim version 7	Last change: 27 X 2012
+*viewport.txt*	View buffer of selected part of a target buffer		Last change: 27 X 2012
 
 
 				     View Port
