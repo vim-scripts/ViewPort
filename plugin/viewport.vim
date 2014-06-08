@@ -51,9 +51,9 @@ fun! ViewPort(cmd, s_line, e_line, ...) " {{{1
 
     let b:viewport_lines = lines
 endf
-com! -range -nargs=* Vpedit :call <sid>ViewPort("edit", <line1>, <line2>, <f-args>)
-com! -range -nargs=* Vpvsplit :call <sid>ViewPort("vsplit", <line1>, <line2>, <f-args>)
-com! -range -nargs=* Vpsplit :call <sid>ViewPort("split", <line1>, <line2>, <f-args>)
+com! -range -nargs=* Vpedit :call ViewPort("edit", <line1>, <line2>, <f-args>)
+com! -range -nargs=* Vpvsplit :call ViewPort("vsplit", <line1>, <line2>, <f-args>)
+com! -range -nargs=* Vpsplit :call ViewPort("split", <line1>, <line2>, <f-args>)
 fun! <sid>Read() " {{{1
     let s_view = winsaveview()
     let c_pos = getpos(".")
